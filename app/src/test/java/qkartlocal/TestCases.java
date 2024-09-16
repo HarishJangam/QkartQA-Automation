@@ -11,18 +11,21 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 // import dev.failsafe.internal.util.Assert;
 
 import java.time.Duration;
+import java.util.List;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.File;
 import java.io.IOException;
 
 import qkartlocal.pages.Register;
+import qkartlocal.pages.SearchProduct;
 import qkartlocal.pages.Home;
 import qkartlocal.pages.Login;
 
@@ -59,7 +62,7 @@ public class TestCases {
         FileUtils.copyFile(SrcFile, DestFile);
     }
 
-    @Test
+    // @Test
     public void testCase01() throws InterruptedException{
         boolean status=false;
         Register register=new Register(driver);
@@ -74,7 +77,7 @@ public class TestCases {
 
     }
 
-    @Test
+    // @Test
     public void testCase02() throws InterruptedException{
         System.out.println("t01");
         boolean status=false;
@@ -89,7 +92,7 @@ public class TestCases {
         Assert.assertFalse(status,"registration failed");
     }
 
-    @Test
+    // @Test
     public void testCase03() throws InterruptedException{
         System.out.println("t01");
 
@@ -116,7 +119,7 @@ public class TestCases {
 
     }
 
-    @Test
+    // @Test
     public void testCase04() throws InterruptedException{
         System.out.println("t01");
 
@@ -133,5 +136,27 @@ public class TestCases {
         Assert.assertTrue(status,"size chart is not displayed");
     }
     
+    @Test
+    public void testCase05() throws InterruptedException{
+        Home home=new Home(driver);
+        Register register=new Register(driver);
+        register.navigateToRegisterPage();
+        register.newRegister("harish", "harish123", true);
+        String lastGeneratedUserName=register.lastGeneratedusr;
+        Login login=new Login(driver);
+        login.navigateToLoginPage();
+        login.newLogin(lastGeneratedUserName, "harish123");
+        home.navigateToHomePage();
+        home.searchFunctionality("yonex");
+        Thread.sleep(2000);
+        home.addToCart("yonex");
+        Thread.sleep(5000);
+        
+    }
+
+    @AfterClass
+    public void closeDriver(){
+        driver.quit();
+    }
 
 }
